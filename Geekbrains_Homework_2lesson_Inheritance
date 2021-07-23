@@ -1,0 +1,94 @@
+#include <string> //Задание 2
+#include <iostream>
+using namespace std;
+
+class Fruit
+{
+public:
+    std::string m_name;
+    string m_color;
+
+    Fruit(std::string name = "apple", string color = "red")
+        : m_name(name), m_color(color)
+    {
+    }
+
+    std::string getName() const { return m_name; }
+    string getColor() const { return m_color; }
+};
+
+class Apple : public Fruit
+{
+public:
+    std::string m_name;
+    string m_color;
+
+    Apple(std::string name = "apple", string color = "red")
+        : m_name(name), m_color(color)
+    {
+    }
+
+    std::string getName() const { return m_name; }
+    string getColor() const { return m_color; }
+};
+
+class Banana : public Fruit
+{
+public:
+    std::string m_name;
+    string m_color;
+
+    Banana(std::string name = "banana", string color = "yellow")
+        : m_name(name), m_color(color)
+    {
+    }
+
+    std::string getName() const { return m_name; }
+    string getColor() const { return m_color; }
+};
+
+class GrannySmith : public Apple
+{
+public:
+    std::string m_name;
+    string m_color;
+
+    GrannySmith(std::string name = "GrannySmith apple", string color = "green")
+        : m_name(name), m_color(color)
+    {
+    }
+
+    std::string getName() const { return m_name; }
+    string getColor() const { return m_color; }
+};
+
+int main()
+{
+    Apple a;
+    Banana b;
+    GrannySmith c;
+
+    std::cout << "My " << a.getName() << " is " << a.getColor() << ".\n";
+    std::cout << "My " << b.getName() << " is " << b.getColor() << ".\n";
+    std::cout << "My " << c.getName() << " is " << c.getColor() << ".\n";
+
+    return 0;
+}
+
+//Задание 3 Игра в Блэк-джек
+
+//базовые классы
+//
+//class deck // всего карт
+//class gamers //всего игроков
+//class maxpoint //допустимое(необходимое) кол-во очков на игроока (21очко)
+//class bank //банк фишек(всего фишек на игру)
+//class diler //Крупье
+
+//производные классы
+//
+//class arm // карты в руке игрока
+//class points // очки игрока
+//class chip // фишки игрока
+//
+//около 8 классов
