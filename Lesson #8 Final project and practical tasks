@@ -1,0 +1,214 @@
+// #1
+
+#include <exception>
+#include <string>
+ 
+class DivistionByZero : public std::exception {
+    std::string m_what;
+public:
+    DivistionByZero(std::string what) noexcept
+        : std::exception()
+        , m_what(std::move(what))
+    {}
+    
+    const char *what() const noexcept {
+        return m_what.c_str();
+    }
+};
+ 
+ 
+#include <iostream>
+ 
+template<typename T, typename U>
+auto divide(T &&nominator, U &&denominator) {
+    if (denominator == 0)
+        throw DivistionByZero("Divistion by Zero");
+    return nominator / denominator;
+}
+ 
+int main() {
+    try {
+        volatile int a = 2;
+        int b = 3;
+        std::cout << divide(a, b) << std::endl;
+        
+        std::cout << divide(std::move(a), b) << std::endl;        
+        
+        std::cout << divide(3, 2) << std::endl;
+        std::cout << divide(3.0, 2.0) << std::endl;
+        std::cout << divide(1.0, 0.0) << std::endl;
+    } catch (const DivistionByZero &e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+// #2
+
+#include <iostream>
+ 
+class Ex
+{
+    public:
+    double x;
+    Ex(const double &x_):x(x_){}
+    ~Ex(){}
+};
+ 
+class Bar
+{
+    private:
+    double y;
+    
+    public:
+    Bar(){ y=0; }
+    ~Bar(){}
+    void set(const double &a)
+    {
+        if(y+a<=100)
+        {
+            y=a;
+            
+        } else throw Ex(y*a);
+    }
+    
+};
+ 
+int main()
+{
+    Bar b;
+    int x{};
+    while(std::cin>>x && x!=0){
+        
+        try
+        {
+            b.set(x);
+        } 
+        catch(Ex &err)
+        {
+            std::cerr<<"Exception: ay "<<err.x<<std::endl;
+        }
+    }
+}
+
+// #3
+
+#include <iostream>
+#include <string>
+ 
+using namespace std;
+const int ten = 10;
+const int zero = 0;
+ 
+class Robot;
+ 
+class Exeptions
+{
+    
+public:
+    static void OffTheField(int x, int y, string command)
+    {
+        cout << "Handled an OffTheField exception" << endl << "Robot coordinates:" << x << "," << y << endl << "Last command entered:" << command << endl;
+    }
+    static void IllegalCommand(const Robot &ob, int command)
+    {
+        cout << "Handled IllegalCommand exception" << endl;
+        ob.show();
+        cout << "Last command entered:" << command << endl;
+    }
+};
+ 
+class Robot
+{
+protected:
+    int x, y;
+public:
+    Robot() { x = 0; y = 0; }
+ 
+    void up()
+    {
+        if (y += 1 > ten)
+        {
+            Exeptions::OffTheField(x, y, "Up");
+        }
+        else y++;
+        show();
+    }
+    void down()
+    {
+        if (y -= 1 < zero)
+        {
+            Exeptions ob;
+            ob.OffTheField(x, y, "Down");
+        }
+        else y--;
+        show();
+    }
+    void left()
+    {
+        if (x -= 1 < zero)
+        {
+            Exeptions ob;
+            ob.OffTheField(x, y, "Left");
+        }
+        else x--;
+        show();
+    }
+    void right()
+    {
+        if (x += 1 > ten)
+        {
+            Exeptions ob;
+            ob.OffTheField(x, y, "Right");
+        }
+        else x++;
+        show();
+    }
+    void show() const
+    {
+        cout << "Robot coordinates:" << x << "," << y << endl;
+    }
+};
+ 
+int main()
+{
+    int command;
+    Robot rob;
+    while (true)
+    {
+        cout << "Robot control program. \ nEnter 1 to raise the robot one square up. \ n2 - one square down. \ n3 - one square to the left. \ n4 - one square to the right. \ n5 - exit the program";
+        cin >> command;
+        cout << endl;
+        switch (command)
+        {
+        case 1:
+        {
+            rob.up();
+            break;
+        }
+        case 2:
+        {
+            rob.down();
+            break;
+        }
+        case 3:
+        {
+            rob.left();
+            break;
+        }
+        case 4:
+        {
+            rob.right();
+            break;
+        }
+        case 5:
+        {
+            cout << "Exit the program." << endl;
+            return 0;
+        }
+        default:
+            Exeptions ob;
+            ob.IllegalCommand(rob, command);
+            break;
+        }
+    }
+}
